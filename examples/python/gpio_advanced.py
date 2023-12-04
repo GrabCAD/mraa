@@ -36,7 +36,7 @@ c = Counter()
 # inside a python interrupt you cannot use 'basic' types so you'll need to use
 # objects
 def isr_routine(gpio):
-    print("pin " + repr(gpio.getPin(True)) + " = " + repr(gpio.read()))
+    print(f"pin {repr(gpio.getPin(True))} = {repr(gpio.read())}")
     c.count += 1
 
 # GPIO
@@ -46,7 +46,7 @@ try:
     # initialise GPIO
     x = mraa.Gpio(pin)
 
-    print("Starting ISR for pin " + repr(pin))
+    print(f"Starting ISR for pin {repr(pin)}")
 
     # set direction and edge types for interrupt
     x.dir(mraa.DIR_IN)

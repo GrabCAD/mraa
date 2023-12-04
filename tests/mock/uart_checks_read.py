@@ -36,7 +36,8 @@ class UartChecksRead(u.TestCase):
 
   def test_uart_read(self):
     TEST_DATA_LEN = 10
-    EXPECTED_RESULT = bytearray([MOCK_UART_DATA_BYTE for x in range(TEST_DATA_LEN)])
+    EXPECTED_RESULT = bytearray(
+        [MOCK_UART_DATA_BYTE for _ in range(TEST_DATA_LEN)])
     self.assertEqual(self.uart.read(TEST_DATA_LEN),
                      EXPECTED_RESULT,
                      "Running UART read(%d) did not return %s" % (TEST_DATA_LEN, repr(EXPECTED_RESULT)))

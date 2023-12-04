@@ -36,13 +36,16 @@ class I2cChecksRead(u.TestCase):
 
   def test_i2c_read_full_reg_range(self):
     self.i2c.address(MRAA_MOCK_I2C_ADDR)
-    expected_res = bytearray([MRAA_MOCK_I2C_DATA_INIT_BYTE for i in range(MRAA_MOCK_I2C_DATA_LEN)])
+    expected_res = bytearray(
+        [MRAA_MOCK_I2C_DATA_INIT_BYTE for _ in range(MRAA_MOCK_I2C_DATA_LEN)])
     res = self.i2c.read(MRAA_MOCK_I2C_DATA_LEN)
     self.assertEqual(res, expected_res, "I2C read() of full register range returned unexpected data")
 
   def test_i2c_read_part_reg_range(self):
     self.i2c.address(MRAA_MOCK_I2C_ADDR)
-    expected_res = bytearray([MRAA_MOCK_I2C_DATA_INIT_BYTE for i in range(MRAA_MOCK_I2C_DATA_LEN - 1)])
+    expected_res = bytearray([
+        MRAA_MOCK_I2C_DATA_INIT_BYTE for _ in range(MRAA_MOCK_I2C_DATA_LEN - 1)
+    ])
     res = self.i2c.read(MRAA_MOCK_I2C_DATA_LEN - 1)
     self.assertEqual(res, expected_res, "I2C read() of partial register range returned unexpected data")
 

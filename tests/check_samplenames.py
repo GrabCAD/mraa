@@ -24,40 +24,28 @@ class SampleNames(u.TestCase):
 
                 #check for C files
                 if cSampleName.endswith('.c'):
-                    ok = False
-                    for file in os.listdir(cSamplesDir):
-                        if file == cSampleName:
-                            ok = True
-                            break
+                    ok = any(file == cSampleName for file in os.listdir(cSamplesDir))
                     if not ok:
                         missing_c_files.append(cSampleName)
 
                 #check for Cpp files
                 if cSampleName.endswith('.cpp'):
-                    ok = False
-                    for file in os.listdir(cppSamplesDir):
-                        if file == cSampleName:
-                            ok = True
-                            break
+                    ok = any(file == cSampleName for file in os.listdir(cppSamplesDir))
                     if not ok:
                         missing_cpp_files.append(cSampleName)
 
                 #check for java files
                 javaSampleName = javaSampleName.lstrip("java/")
                 if javaSampleName.endswith('.java'):
-                    ok = False
-                    for file in os.listdir(javaSamplesDir):
-                        if file == javaSampleName:
-                            ok = True
-                            break
+                    ok = any(file == javaSampleName for file in os.listdir(javaSamplesDir))
                     if not ok:
                         missing_java_files.append(javaSampleName)
 
         self.assertEqual( len(missing_java_files) + len(missing_c_files) + len(missing_cpp_files), 0,
                 "\nThe following files are missing from samples:\n" + \
-                "\n".join(missing_c_files) + "\n" + \
-                "\n".join(missing_cpp_files) + "\n" + \
-                "\n".join(missing_java_files))
+                    "\n".join(missing_c_files) + "\n" + \
+                    "\n".join(missing_cpp_files) + "\n" + \
+                    "\n".join(missing_java_files))
 
 if __name__ == '__main__':
           u.main()

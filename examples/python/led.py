@@ -38,12 +38,7 @@ val = led_1.readMaxBrightness()
 print("maximum brightness value for user1 led is: %d" % val);
 
 # turn led on/off depending on read max_brightness value
-if (val >= 1):
-    val = 0
-# never reached mostly
-else:
-    val = 1
-
+val = 0 if (val >= 1) else 1
 # set LED brightness
 led_1.setBrightness(val)
 

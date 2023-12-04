@@ -36,7 +36,7 @@ class UartChecksWrite(u.TestCase):
 
   def test_uart_write(self):
     TEST_DATA_LEN = 10
-    TEST_DATA = bytearray([x for x in range(TEST_DATA_LEN)])
+    TEST_DATA = bytearray(list(range(TEST_DATA_LEN)))
     self.assertEqual(self.uart.write(TEST_DATA),
                      TEST_DATA_LEN,
                      "Running UART write(%s) did not return %d" % (repr(TEST_DATA), TEST_DATA_LEN))

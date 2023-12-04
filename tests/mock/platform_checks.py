@@ -37,12 +37,12 @@ class PlatformChecks(u.TestCase):
 
   def test_adc_std_res(self):
     adc_std_res = m.adcSupportedBits()
-    print("Platform ADC standard resolution is: " + str(adc_std_res) + " bits")
+    print(f"Platform ADC standard resolution is: {str(adc_std_res)} bits")
     self.assertEqual(adc_std_res, PLATFORM_STD_ADC_RES_BITS, "Wrong ADC standard resolution")
 
   def test_adc_max_res(self):
     adc_max_res = m.adcRawBits()
-    print("Platform ADC max. resolution is: " + str(adc_max_res) + " bits")
+    print(f"Platform ADC max. resolution is: {str(adc_max_res)} bits")
     self.assertEqual(adc_max_res, PLATFORM_MAX_ADC_RES_BITS, "Wrong ADC max. resolution")
 
 if __name__ == "__main__":

@@ -38,17 +38,11 @@ import optparse
 
 
 def my_open_read(source):
-    if hasattr(source, "read"):
-        return source
-    else:
-        return open(source)
+    return source if hasattr(source, "read") else open(source)
 
 
 def my_open_write(dest):
-    if hasattr(dest, "write"):
-        return dest
-    else:
-        return open(dest, 'w')
+    return dest if hasattr(dest, "write") else open(dest, 'w')
 
 
 class Doxy2SWIG:
@@ -74,10 +68,7 @@ class Doxy2SWIG:
         self.xmldoc = minidom.parse(f).documentElement
         f.close()
 
-        self.pieces = []
-        self.pieces.append('\n// File: %s\n' %
-                           os.path.basename(f.name))
-
+        self.pieces = [('\n// File: %s\n' % os.path.basename(f.name))]
         self.space_re = re.compile(r'\s+')
         self.lead_spc = re.compile(r'^(%feature\S+\s+\S+\s*?)"\s+(\S)')
         self.multi = 0
@@ -108,7 +99,7 @@ class Doxy2SWIG:
         nodes.
 
         """
-        pm = getattr(self, "parse_%s" % node.__class__.__name__)
+        pm = getattr(self, f"parse_{node.__class__.__name__}")
         pm(node)
 
     def parse_Document(self, node):
@@ -120,10 +111,7 @@ class Doxy2SWIG:
         txt = txt.replace('"', r'\"')
         # ignore pure whitespace
         m = self.space_re.match(txt)
-        if m and len(m.group()) == len(txt):
-            # do nothing
-            pass
-        else:
+        if not m or len(m.group()) != len(txt):
             self.add_text(textwrap.fill(txt, break_long_words=False))
 
     def parse_Element(self, node):
@@ -137,7 +125,7 @@ class Doxy2SWIG:
         ignores = self.ignores
         if name in ignores:
             return
-        attr = "do_%s" % name
+        attr = f"do_{name}"
         if hasattr(self, attr):
             handlerMethod = getattr(self, attr)
             handlerMethod(node)
@@ -261,7 +249,7 @@ class Doxy2SWIG:
         if data.find('Exception') != -1:
             self.add_text(data)
         else:
-            self.add_text("%s: " % data)
+            self.add_text(f"{data}: ")
 
     def do_parameterdefinition(self, node):
         self.generic_parse(node, pad=1)
@@ -275,19 +263,16 @@ class Doxy2SWIG:
     def do_memberdef(self, node):
         prot = node.attributes['prot'].value
         id = node.attributes['id'].value
-        kind = node.attributes['kind'].value
-        tmp = node.parentNode.parentNode.parentNode
-        compdef = tmp.getElementsByTagName('compounddef')[0]
-        cdef_kind = compdef.attributes['kind'].value
-
         if prot == 'public':
+            tmp = node.parentNode.parentNode.parentNode
+            compdef = tmp.getElementsByTagName('compounddef')[0]
             first = self.get_specific_nodes(node, ('definition', 'name'))
             name = first['name'].firstChild.data
             if name[:8] == 'operator':  # Don't handle operators yet.
                 return
 
-            if not 'definition' in first or \
-                   kind in ['variable', 'typedef']:
+            kind = node.attributes['kind'].value
+            if 'definition' not in first or kind in ['variable', 'typedef']:
                 return
 
             if self.include_function_definition:
@@ -298,6 +283,8 @@ class Doxy2SWIG:
             self.add_text('%feature("docstring") ')
 
             anc = node.parentNode.parentNode
+            cdef_kind = compdef.attributes['kind'].value
+
             if cdef_kind in ('file', 'namespace'):
                 ns_node = anc.getElementsByTagName('innernamespace')
                 if not ns_node and cdef_kind == 'namespace':
@@ -350,13 +337,10 @@ class Doxy2SWIG:
         kind = node.attributes['kind'].value
         if kind == 'warning':
             self.add_text(['\n', 'WARNING: '])
-            self.generic_parse(node)
         elif kind == 'see':
             self.add_text('\n')
             self.add_text('See: ')
-            self.generic_parse(node)
-        else:
-            self.generic_parse(node)
+        self.generic_parse(node)
 
     def do_argsstring(self, node):
         self.generic_parse(node, pad=1)
@@ -372,11 +356,11 @@ class Doxy2SWIG:
         comps = node.getElementsByTagName('compound')
         for c in comps:
             refid = c.attributes['refid'].value
-            fname = refid + '.xml'
+            fname = f'{refid}.xml'
             if not os.path.exists(fname):
                 fname = os.path.join(self.my_dir,  fname)
             if not self.quiet:
-                print("parsing file: %s" % fname)
+                print(f"parsing file: {fname}")
             p = Doxy2SWIG(fname, self.include_function_definition, self.quiet)
             p.generate()
             self.pieces.extend(self.clean_pieces(p.pieces))
@@ -414,7 +398,7 @@ class Doxy2SWIG:
         _data = "".join(ret)
         ret = []
         for i in _data.split('\n\n'):
-            if i == 'Parameters:' or i == 'Exceptions:' or i == 'Returns:':
+            if i in ['Parameters:', 'Exceptions:', 'Returns:']:
                 ret.extend([i, '\n' + '-' * len(i), '\n\n'])
             elif i.find('// File:') > -1:  # leave comments alone.
                 ret.extend([i, '\n'])
