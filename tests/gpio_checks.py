@@ -36,7 +36,7 @@ class GpioChecks(u.TestCase):
 
   def setUp(self):
     self.pin = m.Gpio(MRAA_GPIO)
-    self.gpio_path = "/sys/class/gpio/gpio" + str(self.pin.getPin(True))
+    self.gpio_path = f"/sys/class/gpio/gpio{str(self.pin.getPin(True))}"
 
   def tearDown(self):
     # dereference pin to force cleanup
@@ -51,32 +51,28 @@ class GpioChecks(u.TestCase):
 
   def test_set_GPIO_as_output(self):
     self.pin.dir(m.DIR_OUT)
-    dir_file = open(self.gpio_path + "/direction")
-    dir_file_content = dir_file.readline()[:-1]
-    dir_file.close()
+    with open(f"{self.gpio_path}/direction") as dir_file:
+      dir_file_content = dir_file.readline()[:-1]
     self.assertMultiLineEqual(dir_file_content, "out")
 
   def test_set_GPIO_as_input(self):
     self.pin.dir(m.DIR_IN)
-    dir_file = open(self.gpio_path + "/direction")
-    dir_file_content = dir_file.readline()[:-1]
-    dir_file.close()
+    with open(f"{self.gpio_path}/direction") as dir_file:
+      dir_file_content = dir_file.readline()[:-1]
     self.assertMultiLineEqual(dir_file_content, "in")
 
   def test_GPIO_as_output_write_HIGH_level(self):
     self.pin.dir(m.DIR_OUT)
     self.pin.write(1)
-    val_file = open(self.gpio_path + "/value")
-    sysfs_pin_value = val_file.readline()[:-1]
-    val_file.close()
+    with open(f"{self.gpio_path}/value") as val_file:
+      sysfs_pin_value = val_file.readline()[:-1]
     self.assertEqual(int(sysfs_pin_value),1, "Value doesn't match the HIGH state")
 
   def test_GPIO_as_output_write_LOW_level(self):
     self.pin.dir(m.DIR_OUT)
     self.pin.write(0)
-    val_file = open(self.gpio_path + "/value")
-    sysfs_pin_value = val_file.readline()[:-1]
-    val_file.close()
+    with open(f"{self.gpio_path}/value") as val_file:
+      sysfs_pin_value = val_file.readline()[:-1]
     self.assertEqual(int(sysfs_pin_value), 0, "Value doesn't match the LOW state")
 
   def test_GPIO_as_input_and_write_HIGH_on_it(self):

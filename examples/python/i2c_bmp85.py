@@ -39,7 +39,7 @@ if x.readReg(0xd0) != 0x55:
 x.writeReg(0xf4, 0x2e)
 
 # read a 16bit reg, obviously it's uncalibrated so mostly a useless value :)
-print(str(x.readWordReg(0xf6)))
+print(x.readWordReg(0xf6))
 
 # and we can do the same thing with the read()/write() calls if we wished
 # thought I'd really not recommend it!
@@ -50,5 +50,5 @@ x.writeByte(0xf6)
 d = x.read(2)
 
 # WARNING: python 3.2+ call
-print(str(d))
+print(d)
 print(int.from_bytes(d, byteorder='little'))

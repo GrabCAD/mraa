@@ -61,7 +61,8 @@ class GpioChecksDir(u.TestCase):
   def test_set_dir_invalid(self):
     direction = 99
     res = self.pin.dir(direction)
-    self.assertNotEqual(res, m.SUCCESS, "Setting direction to " + str(direction) + " should have failed")
+    self.assertNotEqual(res, m.SUCCESS,
+                        f"Setting direction to {direction} should have failed")
 
 if __name__ == '__main__':
   u.main()

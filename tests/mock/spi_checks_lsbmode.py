@@ -36,15 +36,19 @@ class SpiChecksLsbmode(u.TestCase):
 
   def test_spi_set_lsbmode_false(self):
     TEST_LSBMODE = False
-    self.assertEqual(self.spi.lsbmode(TEST_LSBMODE),
-                     m.SUCCESS,
-                     "Setting LSB mode to %s did not return success" %TEST_LSBMODE)
+    self.assertEqual(
+        self.spi.lsbmode(TEST_LSBMODE),
+        m.SUCCESS,
+        f"Setting LSB mode to {TEST_LSBMODE} did not return success",
+    )
 
   def test_spi_set_lsbmode_true(self):
     TEST_LSBMODE = True
-    self.assertEqual(self.spi.lsbmode(TEST_LSBMODE),
-                     m.SUCCESS,
-                     "Setting LSB mode to %s did not return success" %TEST_LSBMODE)
+    self.assertEqual(
+        self.spi.lsbmode(TEST_LSBMODE),
+        m.SUCCESS,
+        f"Setting LSB mode to {TEST_LSBMODE} did not return success",
+    )
 
   def test_spi_set_lsbmode_invalid(self):
     TEST_LSBMODE = 10

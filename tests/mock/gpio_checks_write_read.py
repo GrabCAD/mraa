@@ -52,9 +52,11 @@ class GpioChecksWriteRead(u.TestCase):
     self.pin.dir(m.DIR_OUT)
     value = 10
     res = self.pin.write(value)
-    self.assertNotEqual(res, m.SUCCESS, "Writing " + str(value) + " to GPIO should have failed")
+    self.assertNotEqual(res, m.SUCCESS,
+                        f"Writing {value} to GPIO should have failed")
     res = self.pin.read()
-    self.assertNotEqual(res, value, "Writing " + str(value) + " to GPIO should not have set it to " + str(value))
+    self.assertNotEqual(
+        res, value, f"Writing {value} to GPIO should not have set it to {value}")
 
   def test_gpio_as_input_write_HIGH(self):
     self.pin.dir(m.DIR_IN)

@@ -40,12 +40,12 @@ class PlatformChecksEdison(u.TestCase):
 
   def test_mraa_check_platform_ADC_max_resolution(self):
     self.p_ADC_mres = m.adcRawBits()
-    print("Platform ADC max. resolution is: " + str(self.p_ADC_mres) + " bits")
+    print(f"Platform ADC max. resolution is: {str(self.p_ADC_mres)} bits")
     self.assertEqual(self.p_ADC_mres, 12, "Wrong ADC max. resolution. Check platform ...")
 
   def test_mraa_check_platform_ADC_resolution(self):
     self.p_ADC_res = m.adcSupportedBits()
-    print("Platform ADC resolution is: " + str(self.p_ADC_res) + " bits")
+    print(f"Platform ADC resolution is: {str(self.p_ADC_res)} bits")
     self.assertEqual(self.p_ADC_res, 10, "Wrong ADC supported resolution. Check platform ...")
 
 if __name__ == "__main__":

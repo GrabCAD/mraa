@@ -30,7 +30,7 @@ import random as rand
 # intialise SPI
 dev = m.Spi(0)
 
-for x in range(0,100):
+for _ in range(0,100):
     txbuf = bytearray(4)
     for y in range(0,4):
         txbuf[y] = rand.randrange(0, 256)
